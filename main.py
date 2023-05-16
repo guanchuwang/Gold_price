@@ -8,13 +8,9 @@ import re
 import pandas as pd
 import matplotlib.pyplot as plt
 from utils import url_generate, url_template
+from pypinyin import pinyin
 
-
-
-
-
-
-
+import matplotlib.font_manager as fm
 
 ISOTIMEFORMAT = '%Y-%m-%d' # %H:%M:%S,f'
 
@@ -23,7 +19,7 @@ print(theTime_str)
 
 theTime_date = datetime.datetime.strptime(theTime_str, ISOTIMEFORMAT)
 
-delta = datetime.timedelta(days=20)
+delta = datetime.timedelta(days=100)
 lastTime_date = theTime_date - delta
 lastTime_str = lastTime_date.strftime('%Y-%m-%d')
 print(lastTime_str)
@@ -99,7 +95,9 @@ def interval_estimation(date1, date2):
 
 
 date_start_str = date_buf[-1]
-for brand in brand_buf:
+data_end_str = date_buf[0]
+brand_buf_unique = np.unique(brand_buf)
+for brand in brand_buf_unique:
 
     date_brand_str = price_date_buf[brand]["date_str"]
     date_brand_int = []
@@ -108,14 +106,25 @@ for brand in brand_buf:
 
     price_date_buf[brand]["date_int"] = date_brand_int
 
+plt.figure(figsize=(20, 5))
 
-for brand in brand_buf:
-    plt.plot(price_date_buf[brand]["date_int"], price_date_buf[brand]["price"], label=brand)
-    plt.xticks(price_date_buf[brand]["date_int"], price_date_buf[brand]["date_str"], fontsize=15)
+for brand in brand_buf_unique:
 
+    # print(brand)
+    brand_pinyin = pinyin(brand)
+    brand_pinyin_str = str(brand_pinyin)
+    plt.plot(price_date_buf[brand]["date_int"], price_date_buf[brand]["price"], linewidth=2, label=brand_pinyin_str)
+
+
+# plt.rcParams['font.family'] = 'serif'
+# plt.rcParams['font.serif'] = 'Simsun (founder extended)'
+plt.legend(fontsize=15, bbox_to_anchor=(1.0, 1.0), loc='upper left')
 plt.xlabel("Date", fontsize=15)
 plt.ylabel("Price", fontsize=15)
-
+plt.yticks(fontsize=15)
+plt.xticks([0, interval_estimation(date_start_str, data_end_str)], [date_start_str, data_end_str], fontsize=15)
+plt.xlim([0, interval_estimation(date_start_str, data_end_str)])
+plt.subplots_adjust(left=0.04, bottom=0.15, top=0.93, right=0.8, wspace=0.05)
 plt.savefig("figures/price_vs_time.png")
 plt.close()
 
