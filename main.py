@@ -7,10 +7,8 @@ import re
 # from bs4 import BeautifulSoup
 import pandas as pd
 import matplotlib.pyplot as plt
-from utils import url_generate, url_template
+from utils import url_generate, url_template, git_push
 from pypinyin import pinyin
-
-import matplotlib.font_manager as fm
 
 ISOTIMEFORMAT = '%Y-%m-%d' # %H:%M:%S,f'
 
@@ -129,14 +127,8 @@ plt.savefig("figures/price_vs_time.png")
 plt.close()
 
 
-#
-# # print(tables)
-#
-# keywords = ["品牌", "价格", "日期"]
-# table = tables[0]
-# for key in table.keys():
-#     print(list(table[key]))
-#     print("品牌" in list(table[key]))
+git_push() # Update Github Repo
+
 
 
 
