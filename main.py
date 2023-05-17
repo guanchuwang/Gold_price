@@ -127,7 +127,7 @@ plt.savefig("figures/price_vs_time.png")
 plt.close()
 
 
-git_push() # Update Github Repo
+# git_push() # Update Github Repo
 
 
 
